@@ -25,9 +25,9 @@ class Level:
                 x = col_index * TILESIZE
                 y = row_index *  TILESIZE
                 if col == 'x':
-                    Tile((x,y), [self.visible_sprites])
+                    Tile((x,y), [self.visible_sprites, self.obstables_sprites])
                 if col == 'p':
-                    self.player = Player((x,y), [self.visible_sprites])
+                    self.player = Player((x,y), [self.visible_sprites], self.obstables_sprites)
 
     def run(self):
         # update an draw the game
