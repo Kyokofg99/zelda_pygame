@@ -1,11 +1,13 @@
 import enum
+from random import randint
 from re import X
 import pygame
 from settings import *
 from tile import Tile
 from player import Player
 from debug import debug
-from support import import_csv_layout
+from support import import_csv_layout, import_folder
+from random import choice
 
 class Level:
     def __init__(self):
@@ -15,7 +17,7 @@ class Level:
         
         # sprite group setup
         self.visible_sprites = YSortCameraGroup()
-        self.obstables_sprites = pygame.sprite.Group()
+        self.obstacle_sprite = pygame.sprite.Group()
 
         # sprite set up
         self.create_map()
@@ -26,6 +28,9 @@ class Level:
             'grass': import_csv_layout('map/map_Grass.csv'),
             'object': import_csv_layout('map/map_Objects.csv')
         }
+        graphics = {
+            'grass': import_folder('./graphics/Grass')
+        }
 
         for style,layout in layouts.items():
             for row_index,row in enumerate(layout):
@@ -35,12 +40,14 @@ class Level:
                         y = row_index *  TILESIZE
                     
                         if style == 'boundary':
-                            Tile((x,y), [self.obstables_sprites], 'invisible')
-        #        if col == 'x':
-        #            Tile((x,y), [self.visible_sprites, self.obstables_sprites])
-        #        if col == 'p':
-        #            self.player : Player = Player((x,y), [self.visible_sprites], self.obstables_sprites)
-        self.player : Player = Player((2000,1430), [self.visible_sprites], self.obstables_sprites)
+                            Tile((x,y), [self.obstacle_sprite], 'invisible')
+                        if style == 'grass':
+                            random_grass_image = choice(graphics['grass'])
+                            Tile((x,y), [self.visible_sprites, self.obstacle_sprite], 'grass', surface=random_grass_image)
+                        if style == 'object':
+                            pass
+
+        self.player : Player = Player((2000,1430), [self.visible_sprites], self.obstacle_sprite)
 
     def run(self):
         # update an draw the game
