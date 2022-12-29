@@ -13,6 +13,7 @@ class Player(pygame.sprite.Sprite):
 
         # grahics setup
         self.import_player_assets()
+        self.status = 'down'
 
         # movement
         self.direction = pygame.math.Vector2()
@@ -33,23 +34,25 @@ class Player(pygame.sprite.Sprite):
             animation_path = character_path + animation
             animation_imgs = import_folder(animation_path)
             self.animations[animation] = animation_imgs
-        print(self.animations)
             
-
     def input(self):
         keys : Sequence[bool] = pygame.key.get_pressed()
 
         if keys[pygame.K_w]:
             self.direction.y = -1
+            self.status = 'up'
         elif keys[pygame.K_s]:
             self.direction.y = 1
+            self.status = 'down'
         else:
             self.direction.y = 0
 
         if keys[pygame.K_d]:
             self.direction.x = 1
+            self.status = 'right'
         elif keys[pygame.K_a]:
             self.direction.x = -1
+            self.status = 'left'
         else:
             self.direction.x = 0
 
@@ -65,6 +68,27 @@ class Player(pygame.sprite.Sprite):
             self.attack_time = pygame.time.get_ticks()
             print('magic')
 
+    def get_status(self):
+
+        # idle status
+        if self.direction.x == 0 and self.direction.y == 0:
+            if not 'idle' in self.status and not 'attack' in self.status:
+                self.status = self.status + '_idle'
+
+        if self.attacking:
+            self.direction.x = 0
+            self.direction.y = 0
+
+            if not 'attack' in self.status:
+                if 'idle' in self.status:
+                    self.status = self.status.replace('_idle', '_attack')
+                else:
+                    self.status = self.status + '_attack'
+
+        else:
+            if 'attack' in self.status:
+                self.status = self.status.replace('attack', '')
+        
     def move(self, speed):
         if self.direction.magnitude() != 0:
             self.direction = self.direction.normalize()
@@ -107,4 +131,5 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.input()
         self.cooldowns()
+        self.get_status()
         self.move(self.speed)
