@@ -29,7 +29,8 @@ class Level:
             'object': import_csv_layout('map/map_Objects.csv')
         }
         graphics = {
-            'grass': import_folder('./graphics/Grass')
+            'grass': import_folder('./graphics/Grass'),
+            'objects': import_folder('./graphics/Objects')
         }
 
         for style,layout in layouts.items():
@@ -45,7 +46,8 @@ class Level:
                             random_grass_image = choice(graphics['grass'])
                             Tile((x,y), [self.visible_sprites, self.obstacle_sprite], 'grass', surface=random_grass_image)
                         if style == 'object':
-                            pass
+                            surf = graphics['objects'][int(col)]
+                            Tile((x,y), [self.visible_sprites, self.obstacle_sprite], 'object', surface=surf)
 
         self.player : Player = Player((2000,1430), [self.visible_sprites], self.obstacle_sprite)
 
