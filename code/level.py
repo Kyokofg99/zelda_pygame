@@ -49,7 +49,7 @@ class Level:
                             surf = graphics['objects'][int(col)]
                             Tile((x,y), [self.visible_sprites, self.obstacle_sprite], 'object', surface=surf)
 
-        self.player : Player = Player((2000,1430), [self.visible_sprites], self.obstacle_sprite)
+        self.player : Player = Player((2000,1400), [self.visible_sprites], self.obstacle_sprite)
 
     def run(self):
         # update an draw the game
