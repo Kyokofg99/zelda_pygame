@@ -8,6 +8,7 @@ from player import Player
 from debug import debug
 from support import import_csv_layout, import_folder
 from random import choice
+from weapon import Weapon
 
 class Level:
     def __init__(self):
@@ -21,6 +22,7 @@ class Level:
 
         # sprite set up
         self.create_map()
+            # creates self.player
 
     def create_map(self):
         layouts = {
@@ -49,7 +51,10 @@ class Level:
                             surf = graphics['objects'][int(col)]
                             Tile((x,y), [self.visible_sprites, self.obstacle_sprite], 'object', surface=surf)
 
-        self.player : Player = Player((2000,1400), [self.visible_sprites], self.obstacle_sprite)
+        self.player : Player = Player((2000,1400), [self.visible_sprites], self.obstacle_sprite, self.create_attack)
+
+    def create_attack(self):
+        Weapon(self.player, [self.visible_sprites])
 
     def run(self):
         # update an draw the game

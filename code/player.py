@@ -1,11 +1,11 @@
-from typing import Sequence
+from typing import Callable, Sequence
 import pygame
 from support import import_folder
 from settings import *
 from os import walk
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, obstacle_sprites : Sequence[pygame.sprite.Sprite]):
+    def __init__(self, pos, groups, obstacle_sprites:Sequence[pygame.sprite.Sprite], create_attack:Callable):
         super().__init__(groups)
         self.image = pygame.image.load('graphics/test/player.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
@@ -23,6 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.attacking = False
         self.attack_cooldown = 400
         self.attack_time = None
+        self.create_attack = create_attack
 
         self.obstacle_sprites = obstacle_sprites
 
@@ -65,13 +66,12 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_SPACE] and not self.attacking:
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
-            print('attack')
+            self.create_attack()
 
         # magic input
         if keys[pygame.K_LCTRL] and not self.attacking:
             self.attacking = True
             self.attack_time = pygame.time.get_ticks()
-            print('magic')
 
     def get_status(self):
 
