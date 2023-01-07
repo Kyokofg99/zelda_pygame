@@ -75,7 +75,7 @@ class Level:
         self.ui.display(self.player)
 
         # debug info
-        debug(self.player.status)
+        debug(self.player.status,y=70,x=10)
 
 class YSortCameraGroup(pygame.sprite.Group):
     def __init__(self):
